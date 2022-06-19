@@ -16,7 +16,23 @@ function QuestionList() {
       .then(resp => setQuestions(questions.filter((question) => question.id !== id)))
     }
 
-   
+    const handleAnswers=(id,correctIndex)=>{
+      fetch(`http://localhost:4000/questions/${id}`,{
+        method: 'PATCH', 
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({correctIndex}),
+      }).then(resp=>resp.json())
+      .then(resp=>{ setQuestions(questions.map(question=>{
+      if(question.id===resp.id){
+        return resp
+      }return question
+    }
+    )
+    )
+      })
+    }
 
   return (
     <section>
@@ -26,6 +42,7 @@ function QuestionList() {
         key={question.id}
         question={question}
         handleDelete={handleDelete}
+        onAnswer={handleAnswers}
       />
       })}</ul>
     </section>
